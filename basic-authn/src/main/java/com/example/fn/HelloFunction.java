@@ -47,7 +47,7 @@ public class HelloFunction {
         response.setActive(true);
         var user = new String(Base64.getUrlDecoder().decode(inputToken)).split(":")[0];
         response.setPrincipal(user);
-        response.setScope(new String[]{"list: hello", "read: hello", "create: hello", "update: hello", "delete: hello"});
+        response.setScope(new String[]{"list:hello", "read:hello", "create:hello", "update:hello", "delete:hello"});
         var now = new Date();
         var expiresAt = Calendar.getInstance();
         expiresAt.setTime(now);
