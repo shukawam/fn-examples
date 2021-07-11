@@ -6,6 +6,7 @@ import com.example.fn.data.AuthorizerResponse;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 
 public class HelloFunction {
@@ -47,7 +48,11 @@ public class HelloFunction {
         var user = new String(Base64.getUrlDecoder().decode(inputToken)).split(":")[0];
         response.setPrincipal(user);
         response.setScope(new String[]{"list: hello", "read: hello", "create: hello", "update: hello", "delete: hello"});
-        response.setExpiresAt(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+        var now = new Date();
+        var expiresAt = Calendar.getInstance();
+        expiresAt.setTime(now);
+        expiresAt.add(Calendar.MINUTE, 10);
+        response.setExpiresAt(new SimpleDateFormat(DATE_FORMAT).format(expiresAt.getTime()));
         return response;
     }
 
