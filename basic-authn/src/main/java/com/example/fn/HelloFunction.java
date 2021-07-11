@@ -48,7 +48,7 @@ public class HelloFunction {
         response.setPrincipal(user);
         response.setScope(new String[]{"list: hello", "read: hello", "create: hello", "update: hello", "delete: hello"});
         response.setExpiresAt(new SimpleDateFormat(DATE_FORMAT).format(new Date()));
-        return null;
+        return response;
     }
 
 }
