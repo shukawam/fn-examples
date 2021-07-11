@@ -34,7 +34,7 @@ public class HelloFunction {
             return response;
         }
         // token validation
-        var credential = Base64.getUrlEncoder().encode(String.format("%s:%s", USER, PASSWORD).getBytes(StandardCharsets.UTF_8));
+        var credential = new String(Base64.getUrlEncoder().encode(String.format("%s:%s", USER, PASSWORD).getBytes(StandardCharsets.UTF_8)));
         var inputToken = authorizerRequest.getToken().substring(TOKEN_PREFIX.length());
         if (!credential.equals(inputToken)) {
             var response = new AuthorizerResponse();
