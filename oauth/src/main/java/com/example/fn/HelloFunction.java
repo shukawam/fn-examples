@@ -44,8 +44,7 @@ public class HelloFunction {
         // token validation
         var accessToken = authorizerRequest.getToken().substring(TOKEN_PREFIX.length());
         // token introspection
-        HttpClient httpClient = HttpClient.newBuilder()
-                .build();
+        HttpClient httpClient = HttpClient.newBuilder().build();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(IDCS_BASE_ENDPOINT + "/oauth2/v1/introspect"))
                 .header("Content-Type", "application/x-www-form-unlencoded")
@@ -73,6 +72,7 @@ public class HelloFunction {
             response.setScope(scopes);
             return response;
         } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
             var response = new AuthorizerResponse();
             response.setActive(false);
             response.setWwwAuthenticate("Bearer realm=\"Token introspection is failed.\"");
