@@ -47,7 +47,7 @@ public class HelloFunction {
         HttpClient httpClient = HttpClient.newBuilder().build();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(IDCS_BASE_ENDPOINT + "/oauth2/v1/introspect"))
-                .header("Content-Type", "application/x-www-form-unlencoded")
+                .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Authorization", String.format("Basic %s",
                         Base64.getUrlEncoder().encode(String.format("%s:%s",
                                 CLIENT_ID, CLIENT_SECRET)
