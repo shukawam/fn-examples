@@ -62,7 +62,7 @@ public class HelloFunction {
             HttpResponse<String> httpResponse = httpClient.send(
                     httpRequest, HttpResponse.BodyHandlers.ofString());
             var idcsIntrospectionResponse = new Gson().fromJson(httpResponse.body(), IdcsIntrospectionResponse.class);
-            if (FALSE.equals(idcsIntrospectionResponse.getActive())) {
+            if (!idcsIntrospectionResponse.getActive()) {
                 var response = new AuthorizerResponse();
                 response.setActive(false);
                 response.setWwwAuthenticate("Bearer realm=\"Access Token is something wrong.\"");
