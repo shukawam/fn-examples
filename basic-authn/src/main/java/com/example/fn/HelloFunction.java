@@ -4,7 +4,8 @@ import com.example.fn.data.AuthorizerRequest;
 import com.example.fn.data.AuthorizerResponse;
 
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,7 +13,7 @@ import java.util.Date;
 public class HelloFunction {
     private static final String TYPE = "TOKEN";
     private static final String TOKEN_PREFIX = "Basic ";
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    private static final DateTimeFormatter ISO8601 = DateTimeFormatter.ISO_DATE_TIME;
 
     // Simple Http-basic authentication.
     private static final String USER = "guest";
@@ -52,7 +53,7 @@ public class HelloFunction {
         var expiresAt = Calendar.getInstance();
         expiresAt.setTime(now);
         expiresAt.add(Calendar.MINUTE, 10);
-        response.setExpiresAt(new SimpleDateFormat(DATE_FORMAT).format(expiresAt.getTime()));
+        response.setExpiresAt(ISO8601.format(expiresAt.getTime().toInstant().atOffset(ZoneOffset.UTC)));
         return response;
     }
 
