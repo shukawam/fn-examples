@@ -3,7 +3,6 @@ package com.example.fn;
 import com.example.fn.data.AuthorizerRequest;
 import com.example.fn.data.AuthorizerResponse;
 import com.example.fn.data.IdcsIntrospectionResponse;
-import com.example.fn.data.IntrospectionResponse;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -62,7 +61,7 @@ public class HelloFunction {
             HttpResponse<String> httpResponse = httpClient.send(
                     httpRequest, HttpResponse.BodyHandlers.ofString());
             var idcsIntrospectionResponse = new Gson().fromJson(httpResponse.body(), IdcsIntrospectionResponse.class);
-            if (FALSE.equals(idcsIntrospectionResponse.getActive())) {
+            if (!equals(idcsIntrospectionResponse.getActive())) {
                 var response = new AuthorizerResponse();
                 response.setActive(false);
                 response.setWwwAuthenticate("Bearer realm=\"Access Token is something wrong.\"");
