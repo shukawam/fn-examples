@@ -18,7 +18,7 @@ public class HelloFunction {
         if (!TYPE.equals(authorizerRequest.getType()) || authorizerRequest.getType() == null) {
             var response = new AuthorizerResponse();
             response.setActive(false);
-            response.setWwwAuthenticate("Basic realm=\"Input type is invalid.\"");
+            response.setWwwAuthenticate("Input type is invalid.");
             return response;
         }
         // token validation
@@ -27,7 +27,7 @@ public class HelloFunction {
                 !FN_API_KEY.equals(authorizerRequest.getToken())) {
             var response = new AuthorizerResponse();
             response.setActive(false);
-            response.setWwwAuthenticate("Basic realm=\"Input token is invalid.\"");
+            response.setWwwAuthenticate("Input token is invalid.");
             return response;
         }
         // create response ... 4
