@@ -2,6 +2,7 @@ package com.example.fn;
 
 import com.example.fn.data.AuthorizerRequest;
 import com.example.fn.data.AuthorizerResponse;
+import com.fnproject.fn.api.FnConfiguration;
 
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
@@ -16,8 +17,15 @@ public class HelloFunction {
     private static final DateTimeFormatter ISO8601 = DateTimeFormatter.ISO_DATE_TIME;
 
     // Simple Http-basic authentication.
-    private static final String USER = "guest";
-    private static final String PASSWORD = "password#123";
+    private static final String GUEST_USER = "guest";
+    private static final String GUEST_PASSWORD = "password#123";
+    private static final String ADMIN_USER = "admin";
+    private static final String ADMIN_PASSWORD = "password#123";
+
+    @FnConfiguration
+    public void init() {
+        System.out.println(String.format("Docker Host: %s", System.getenv("DOCKER_HOST")));
+    }
 
     public AuthorizerResponse handleRequest(AuthorizerRequest authorizerRequest) {
         // request validation
@@ -36,9 +44,12 @@ public class HelloFunction {
             return response;
         }
         // token validation
-        var credential = new String(Base64.getUrlEncoder().encode(String.format("%s:%s", USER, PASSWORD).getBytes(StandardCharsets.UTF_8)));
+        var guestCredential = new String(Base64.getUrlEncoder().encode(String.format("%s:%s", GUEST_USER, GUEST_PASSWORD)
+                .getBytes(StandardCharsets.UTF_8)));
+        var adminCredential = new String(Base64.getUrlEncoder().encode(String.format("%s:%s", ADMIN_USER, ADMIN_PASSWORD)
+                .getBytes(StandardCharsets.UTF_8)));
         var inputToken = authorizerRequest.getToken().substring(TOKEN_PREFIX.length());
-        if (!credential.equals(inputToken)) {
+        if (!guestCredential.equals(inputToken) || !adminCredential.equals(inputToken)) {
             var response = new AuthorizerResponse();
             response.setActive(false);
             response.setWwwAuthenticate("Basic realm=\"Username or password is wrong.\"");
