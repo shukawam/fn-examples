@@ -49,7 +49,7 @@ public class HelloFunction {
         var adminCredential = new String(Base64.getUrlEncoder().encode(String.format("%s:%s", ADMIN_USER, ADMIN_PASSWORD)
                 .getBytes(StandardCharsets.UTF_8)));
         var inputToken = authorizerRequest.getToken().substring(TOKEN_PREFIX.length());
-        if (!guestCredential.equals(inputToken) || !adminCredential.equals(inputToken)) {
+        if (!guestCredential.equals(inputToken) && !adminCredential.equals(inputToken)) {
             var response = new AuthorizerResponse();
             response.setActive(false);
             response.setWwwAuthenticate("Basic realm=\"Username or password is wrong.\"");
