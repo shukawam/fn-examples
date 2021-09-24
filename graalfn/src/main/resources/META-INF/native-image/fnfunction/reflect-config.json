@@ -1,0 +1,9 @@
+[
+  {
+    "name" : "com.example.fn.Graalfn",
+    "methods" : [
+      { "name" : "handleRequest" },
+      { "name" : "<init>" }
+    ]
+  }
+]
