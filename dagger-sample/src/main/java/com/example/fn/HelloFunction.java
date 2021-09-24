@@ -1,12 +1,17 @@
 package com.example.fn;
 
+import javax.inject.Inject;
+
 public class HelloFunction {
+    private final HelloProvider helloProvider;
+
+    @Inject
+    public HelloFunction(HelloProvider helloProvider) {
+        this.helloProvider = helloProvider;
+    }
 
     public String handleRequest(String input) {
-        String name = (input == null || input.isEmpty()) ? "world"  : input;
-
-        System.out.println("Inside Java Hello World function"); 
-        return "Hello, " + name + "!";
+        return helloProvider.say(input);
     }
 
 }
