@@ -1,9 +1,13 @@
 package com.example.fn;
 
-import dagger.Component;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-@Component
+@Singleton
 public class HelloProvider {
+
+    @Inject
+    HelloProvider() {}
 
     public String say(String input) {
         String name = (input == null || input.isEmpty()) ? "world"  : input;
