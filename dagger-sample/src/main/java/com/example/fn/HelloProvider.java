@@ -1,10 +1,8 @@
 package com.example.fn;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
-public class HelloProvider {
+public final class HelloProvider {
 
     @Inject
     HelloProvider() {}
