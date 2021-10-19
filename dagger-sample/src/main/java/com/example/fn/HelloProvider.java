@@ -1,9 +1,12 @@
 package com.example.fn;
 
+import dagger.Component;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
+@Component
 public class HelloProvider {
 
     @Inject
