@@ -1,0 +1,8 @@
+{
+  "stream": "watchlist_notification",
+  "partition": "0",
+  "key": null,
+  "value": "eyJmbG9vcl9udW0iOjUsImRldmljZV9tYWMiOiJmOTplMTphNTo2MTo4MTplNyIsImxvY2F0aW9uIjp7IngiOjM1Ljg4MjkxODc2OTQxMDgzNiwieSI6MjkuNjM0MDYxNjkzNzM4MTI2fSwidGltZSI6IjIwMjEtMTAtMTlUMTA6MzQ6MjRaIn0=",
+  "offset": 56,
+  "timestamp": 1634639665236
+}
