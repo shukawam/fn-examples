@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 public class HelloFunction {
     private final HelloProvider provider;
-
     @Inject
     public HelloFunction(HelloProvider provider) {
         this.provider = provider;
