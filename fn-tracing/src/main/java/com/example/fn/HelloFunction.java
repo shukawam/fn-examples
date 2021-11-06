@@ -15,13 +15,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HelloFunction {
-    private static final Logger logger = Logger.getLogger(HelloFunction.class.getName());
-    private String apmUrl;
-    private Sender sender;
-    private ZipkinSpanHandler zipkinSpanHandler;
-    private Tracing tracing;
-    private Tracer tracer;
-    private TraceContext traceContext;
+    static final Logger logger = Logger.getLogger(HelloFunction.class.getName());
+    String apmUrl;
+    Sender sender;
+    AsyncZipkinSpanHandler zipkinSpanHandler;
+    Tracing tracing;
+    Tracer tracer;
+    TraceContext traceContext;
 
     public String handleRequest(String input, TracingContext tracingContext) {
         try {
@@ -29,6 +29,7 @@ public class HelloFunction {
             // Start a new tracer or a span within an existing trace representing an operation.
             Span span = tracer.newChild(traceContext).name("MainHandle").start();
             logger.log(Level.INFO, "Inside Java Hello World function");
+            System.out.println("isTracingEnabled: " + tracingContext.isTracingEnabled());
             try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
                 method1();
                 method2();
@@ -37,14 +38,14 @@ public class HelloFunction {
                 span.error(e); // Unless you handle exceptions, you might not know the operation failed!
                 throw e;
             } finally {
-                span.finish();
+                span.finish(); // note the scope is independent of the span. Always finish a span.
                 tracing.close();
                 zipkinSpanHandler.close();
             }
         } catch (Exception e) {
             return e.getMessage();
         }
-        return "Hello, AppName" + tracingContext.getAppName() + " :: fnName " + tracingContext.getFunctionName();
+        return "Hello, AppName " + tracingContext.getAppName() + " :: fnName " + tracingContext.getFunctionName();
     }
 
     private void initializeZipkin(TracingContext tracingContext) {
