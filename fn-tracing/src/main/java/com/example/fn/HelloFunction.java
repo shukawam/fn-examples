@@ -10,6 +10,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.matcher.Matchers;
 import zipkin2.reporter.Sender;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
 import zipkin2.reporter.urlconnection.URLConnectionSender;
@@ -17,6 +18,7 @@ import zipkin2.reporter.urlconnection.URLConnectionSender;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@ApmTrace
 public class HelloFunction {
     static final Logger logger = Logger.getLogger(HelloFunction.class.getName());
     String apmUrl;
@@ -52,7 +54,9 @@ public class HelloFunction {
         }
         Injector injector = Guice.createInjector(new AbstractModule() {
             @Override
-            protected void configure() {}
+            protected void configure() {
+                bindInterceptor(Matchers.annotatedWith(ApmTrace.class), Matchers.any(), new ApmTraceInterceptor());
+            }
         });
         HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
         return helloFunction.greetService.say(input, tracingContext);
