@@ -6,10 +6,6 @@ import brave.Tracing;
 import brave.propagation.TraceContext;
 import com.fnproject.fn.api.tracing.TracingContext;
 import com.github.kristofa.brave.IdConversion;
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import zipkin2.reporter.Sender;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
 import zipkin2.reporter.urlconnection.URLConnectionSender;
@@ -48,10 +44,10 @@ public class HelloFunction {
         } catch (Exception e) {
             return e.getMessage();
         }
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {}
-        });
+//        Injector injector = Guice.createInjector(new AbstractModule() {
+//            @Override
+//            protected void configure() {}
+//        });
 //        HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
 //        return helloFunction.greetService.say(input, tracingContext);
         return "Hello, AppName " + tracingContext.getAppName() + " :: fnName " + tracingContext.getFunctionName();

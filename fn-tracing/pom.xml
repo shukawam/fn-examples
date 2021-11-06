@@ -27,11 +27,11 @@
             <version>${fdk.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <version>${guice.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.google.inject</groupId>-->
+<!--            <artifactId>guice</artifactId>-->
+<!--            <version>${guice.version}</version>-->
+<!--        </dependency>-->
         <!-- Tracing w/ APM -->
         <dependency>
             <groupId>io.zipkin.reporter2</groupId>
