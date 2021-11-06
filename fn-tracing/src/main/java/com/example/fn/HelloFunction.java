@@ -25,18 +25,10 @@ public class HelloFunction {
     Tracing tracing;
     Tracer tracer;
     TraceContext traceContext;
+    @Inject
     private final GreetService greetService;
 
-    @Inject
-    public HelloFunction(GreetService greetService) {
-        this.greetService = greetService;
-    }
-
     public String handleRequest(String input, TracingContext tracingContext) {
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {}
-        });
         try {
             initializeZipkin(tracingContext);
             // Start a new tracer or a span within an existing trace representing an operation.
@@ -58,6 +50,10 @@ public class HelloFunction {
         } catch (Exception e) {
             return e.getMessage();
         }
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {}
+        });
         HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
         return helloFunction.greetService.say(input, tracingContext);
     }
