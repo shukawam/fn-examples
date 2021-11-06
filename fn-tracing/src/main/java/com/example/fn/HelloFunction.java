@@ -26,7 +26,7 @@ public class HelloFunction {
     Tracer tracer;
     TraceContext traceContext;
     @Inject
-    private final GreetService greetService;
+    private GreetService greetService;
 
     public String handleRequest(String input, TracingContext tracingContext) {
         try {
