@@ -25,8 +25,6 @@ public class HelloFunction {
     Tracing tracing;
     Tracer tracer;
     TraceContext traceContext;
-    @Inject
-    private GreetService greetService;
 
     public String handleRequest(String input, TracingContext tracingContext) {
         try {
@@ -54,8 +52,9 @@ public class HelloFunction {
             @Override
             protected void configure() {}
         });
-        HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
-        return helloFunction.greetService.say(input, tracingContext);
+//        HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
+//        return helloFunction.greetService.say(input, tracingContext);
+        return "Hello, AppName " + tracingContext.getAppName() + " :: fnName " + tracingContext.getFunctionName();
     }
 
     private void initializeZipkin(TracingContext tracingContext) {
