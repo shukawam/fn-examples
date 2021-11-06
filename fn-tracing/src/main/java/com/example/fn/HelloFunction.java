@@ -6,9 +6,12 @@ import brave.Tracing;
 import brave.propagation.TraceContext;
 import com.fnproject.fn.api.tracing.TracingContext;
 import com.github.kristofa.brave.IdConversion;
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import zipkin2.reporter.Sender;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
-import zipkin2.reporter.brave.ZipkinSpanHandler;
 import zipkin2.reporter.urlconnection.URLConnectionSender;
 
 import java.util.logging.Level;
@@ -22,8 +25,18 @@ public class HelloFunction {
     Tracing tracing;
     Tracer tracer;
     TraceContext traceContext;
+    private final GreetService greetService;
+
+    @Inject
+    public HelloFunction(GreetService greetService) {
+        this.greetService = greetService;
+    }
 
     public String handleRequest(String input, TracingContext tracingContext) {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {}
+        });
         try {
             initializeZipkin(tracingContext);
             // Start a new tracer or a span within an existing trace representing an operation.
@@ -45,7 +58,8 @@ public class HelloFunction {
         } catch (Exception e) {
             return e.getMessage();
         }
-        return "Hello, AppName " + tracingContext.getAppName() + " :: fnName " + tracingContext.getFunctionName();
+        HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
+        return helloFunction.greetService.say(input, tracingContext);
     }
 
     private void initializeZipkin(TracingContext tracingContext) {

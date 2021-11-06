@@ -9,6 +9,7 @@
         <zipkin.reporter2.version>2.16.3</zipkin.reporter2.version>
         <zipkin.brave.version>5.13.3</zipkin.brave.version>
         <zipkin.brave.core.version>4.13.6</zipkin.brave.core.version>
+        <guice.version>5.0.1</guice.version>
     </properties>
     <groupId>com.example.fn</groupId>
     <artifactId>hello</artifactId>
@@ -26,6 +27,12 @@
             <version>${fdk.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <!-- Tracing w/ APM -->
         <dependency>
             <groupId>io.zipkin.reporter2</groupId>
             <artifactId>zipkin-sender-urlconnection</artifactId>
