@@ -27,6 +27,16 @@ public class HelloFunction {
     private GreetService greetService;
 
     public String handleRequest(String input, TracingContext tracingContext) {
+        logger.log(Level.INFO, "Inside Java Hello World function");
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getFunctionName());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getAppName());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getTraceId());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getServiceName());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getServiceName());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getSpanId());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getFlags());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getParentSpanId());
+        logger.log(Level.INFO, "tracingContext: " + tracingContext.getTraceCollectorURL());
         try {
             // Start a new tracer or a span within an existing trace representing an operation.
             Span span = tracer.newChild(traceContext).name("MainHandle").start();
@@ -40,7 +50,6 @@ public class HelloFunction {
                 }
             });
             HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
-            logger.log(Level.INFO, "Inside Java Hello World function");
             try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
                 helloFunction.greetService.method1();
                 helloFunction.greetService.method2();
