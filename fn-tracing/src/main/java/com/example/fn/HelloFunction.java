@@ -7,37 +7,43 @@ import brave.propagation.TraceContext;
 import com.example.fn.annotations.ApmTrace;
 import com.example.fn.interceptor.ApmTraceInterceptor;
 import com.fnproject.fn.api.tracing.TracingContext;
+import com.github.kristofa.brave.IdConversion;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.matcher.Matchers;
+import zipkin2.reporter.Sender;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
+import zipkin2.reporter.urlconnection.URLConnectionSender;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class HelloFunction {
-    static final Logger logger = Logger.getLogger(HelloFunction.class.getName());
-    AsyncZipkinSpanHandler zipkinSpanHandler;
-    Tracing tracing;
-    Tracer tracer;
-    TraceContext traceContext;
+    private static final Logger logger = Logger.getLogger(HelloFunction.class.getName());
+    private String apmUrl;
+    private Sender sender;
+    private AsyncZipkinSpanHandler zipkinSpanHandler;
+    private Tracing tracing;
+    private Tracer tracer;
+    private TraceContext traceContext;
     @Inject
     private GreetService greetService;
 
     public String handleRequest(String input, TracingContext tracingContext) {
-        logger.log(Level.INFO, "Inside Java Hello World function");
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getFunctionName());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getAppName());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getTraceId());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getServiceName());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getServiceName());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getSpanId());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getFlags());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getParentSpanId());
-        logger.log(Level.INFO, "tracingContext: " + tracingContext.getTraceCollectorURL());
+        logger.log(Level.INFO, "tracingContext.functionName: " + tracingContext.getFunctionName());
+        logger.log(Level.INFO, "tracingContext.appName: " + tracingContext.getAppName());
+        logger.log(Level.INFO, "tracingContext.traceId: " + tracingContext.getTraceId());
+        logger.log(Level.INFO, "tracingContext.serviceName: " + tracingContext.getServiceName());
+        logger.log(Level.INFO, "tracingContext.spanId: " + tracingContext.getSpanId());
+        logger.log(Level.INFO, "tracingContext.flags: " + tracingContext.getFlags());
+        logger.log(Level.INFO, "tracingContext.parentSpanId: " + tracingContext.getParentSpanId());
+        logger.log(Level.INFO, "tracingContext.traceCollectorUrl: " + tracingContext.getTraceCollectorURL());
+        logger.log(Level.INFO, "tracingContext.tracingEnabled: " + tracingContext.isTracingEnabled());
+        logger.log(Level.INFO, "tracingContext.sampled: " + tracingContext.isSampled());
         try {
+            initializeZipkin(tracingContext);
             // Start a new tracer or a span within an existing trace representing an operation.
             Span span = tracer.newChild(traceContext).name("MainHandle").start();
             Injector injector = Guice.createInjector(new AbstractModule() {
@@ -45,7 +51,7 @@ public class HelloFunction {
                 protected void configure() {
                     bindInterceptor(Matchers.annotatedWith(ApmTrace.class),
                             Matchers.any(),
-                            new ApmTraceInterceptor(tracingContext)
+                            new ApmTraceInterceptor(tracer, traceContext)
                     );
                 }
             });
@@ -55,10 +61,12 @@ public class HelloFunction {
                 helloFunction.greetService.method2();
                 helloFunction.greetService.method3();
             } catch (RuntimeException e) {
-                span.error(e); // Unless you handle exceptions, you might not know the operation failed!
+                // Unless you handle exceptions, you might not know the operation failed!
+                span.error(e);
                 throw e;
             } finally {
-                span.finish(); // note the scope is independent of the span. Always finish a span.
+                // note the scope is independent of the span. Always finish a span.
+                span.finish();
                 tracing.close();
                 zipkinSpanHandler.close();
             }
@@ -66,6 +74,24 @@ public class HelloFunction {
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    private void initializeZipkin(TracingContext tracingContext) {
+        logger.log(Level.INFO, "Initializing the variables");
+        apmUrl = tracingContext.getTraceCollectorURL();
+        sender = URLConnectionSender.create(apmUrl);
+        zipkinSpanHandler = AsyncZipkinSpanHandler.create(sender);
+        tracing = Tracing.newBuilder()
+                .localServiceName(tracingContext.getServiceName())
+                .addSpanHandler(zipkinSpanHandler)
+                .build();
+        tracer = tracing.tracer();
+        tracing.setNoop(!tracingContext.isTracingEnabled());
+        traceContext = TraceContext.newBuilder()
+                .traceId(IdConversion.convertToLong(tracingContext.getTraceId()))
+                .spanId(IdConversion.convertToLong(tracingContext.getSpanId()))
+                .sampled(tracingContext.isSampled())
+                .build();
     }
 
 }
