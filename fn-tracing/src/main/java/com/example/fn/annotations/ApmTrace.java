@@ -1,4 +1,4 @@
-package com.example.fn;
+package com.example.fn.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
