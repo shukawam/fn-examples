@@ -7,14 +7,13 @@ import brave.propagation.TraceContext;
 import com.example.fn.annotations.ApmTrace;
 import com.example.fn.interceptor.ApmTraceInterceptor;
 import com.fnproject.fn.api.tracing.TracingContext;
-import com.github.kristofa.brave.IdConversion;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.matcher.Matchers;
-import zipkin2.reporter.Sender;
 import zipkin2.reporter.brave.AsyncZipkinSpanHandler;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,21 +27,20 @@ public class HelloFunction {
     private GreetService greetService;
 
     public String handleRequest(String input, TracingContext tracingContext) {
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                bindInterceptor(Matchers.annotatedWith(ApmTrace.class),
-                        Matchers.any(),
-                        new ApmTraceInterceptor(tracingContext)
-                );
-            }
-        });
-        HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
         try {
             // Start a new tracer or a span within an existing trace representing an operation.
             Span span = tracer.newChild(traceContext).name("MainHandle").start();
+            Injector injector = Guice.createInjector(new AbstractModule() {
+                @Override
+                protected void configure() {
+                    bindInterceptor(Matchers.annotatedWith(ApmTrace.class),
+                            Matchers.any(),
+                            new ApmTraceInterceptor(tracingContext)
+                    );
+                }
+            });
+            HelloFunction helloFunction = injector.getInstance(HelloFunction.class);
             logger.log(Level.INFO, "Inside Java Hello World function");
-            System.out.println("isTracingEnabled: " + tracingContext.isTracingEnabled());
             try (Tracer.SpanInScope ws = tracer.withSpanInScope(span)) {
                 helloFunction.greetService.method1();
                 helloFunction.greetService.method2();
@@ -55,10 +53,10 @@ public class HelloFunction {
                 tracing.close();
                 zipkinSpanHandler.close();
             }
+            return helloFunction.greetService.say(input, tracingContext);
         } catch (Exception e) {
             return e.getMessage();
         }
-        return helloFunction.greetService.say(input, tracingContext);
     }
 
 }
