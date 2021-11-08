@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class GreetService {
     private static Logger logger = Logger.getLogger(GreetService.class.getName());
 
-    public String say(String input) {
+    public String say() {
         return "Hello world!";
     }
 

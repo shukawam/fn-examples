@@ -33,7 +33,7 @@ public class HelloFunction {
     @Inject
     private GreetService greetService;
 
-    public String handleRequest(String input, TracingContext tracingContext, InvocationContext invocationContext) {
+    public String handleRequest(TracingContext tracingContext, InvocationContext invocationContext) {
         loggingFunctionsHeader(invocationContext);
         loggingTracingContext(tracingContext);
         try {
@@ -54,6 +54,7 @@ public class HelloFunction {
                 helloFunction.greetService.method1();
                 helloFunction.greetService.method2();
                 helloFunction.greetService.method3();
+                return helloFunction.greetService.say();
             } catch (RuntimeException e) {
                 // Unless you handle exceptions, you might not know the operation failed!
                 span.error(e);
@@ -64,7 +65,6 @@ public class HelloFunction {
                 tracing.close();
                 zipkinSpanHandler.close();
             }
-            return helloFunction.greetService.say(input);
         } catch (Exception e) {
             return e.getMessage();
         }
