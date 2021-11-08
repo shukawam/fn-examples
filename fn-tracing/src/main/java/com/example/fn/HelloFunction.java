@@ -33,6 +33,13 @@ public class HelloFunction {
     @Inject
     private GreetService greetService;
 
+    public HelloFunction() {
+        logger.log(Level.INFO, "FN_APP_NAME: " + System.getenv("FN_APP_NAME"));
+        logger.log(Level.INFO, "FN_FN_NAME: " + System.getenv("FN_APP_NAME"));
+        logger.log(Level.INFO, "OCI_TRACE_COLLECTOR_URL: " + System.getenv("OCI_TRACE_COLLECTOR_URL"));
+        logger.log(Level.INFO, "OCI_TRACING_ENABLED: " + System.getenv("OCI_TRACING_ENABLED"));
+    }
+
     public String handleRequest(TracingContext tracingContext, InvocationContext invocationContext) {
         loggingFunctionsHeader(invocationContext);
         loggingTracingContext(tracingContext);
