@@ -4,6 +4,7 @@ import brave.Span;
 import brave.Tracer;
 import brave.Tracing;
 import brave.propagation.TraceContext;
+import brave.sampler.Sampler;
 import com.example.fn.annotations.ApmTrace;
 import com.example.fn.interceptor.ApmTraceInterceptor;
 import com.fnproject.fn.api.Headers;
@@ -45,7 +46,7 @@ public class HelloFunction {
                 protected void configure() {
                     bindInterceptor(Matchers.annotatedWith(ApmTrace.class),
                             Matchers.any(),
-                            new ApmTraceInterceptor(tracer, traceContext)
+                            new ApmTraceInterceptor(tracer, tracing)
                     );
                 }
             });
@@ -77,6 +78,7 @@ public class HelloFunction {
         zipkinSpanHandler = AsyncZipkinSpanHandler.create(sender);
         tracing = Tracing.newBuilder()
                 .localServiceName(tracingContext.getServiceName())
+                .sampler(Sampler.NEVER_SAMPLE)
                 .addSpanHandler(zipkinSpanHandler)
                 .build();
         tracer = tracing.tracer();
