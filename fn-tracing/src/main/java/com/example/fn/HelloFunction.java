@@ -7,7 +7,6 @@ import brave.propagation.TraceContext;
 import brave.sampler.Sampler;
 import com.example.fn.annotations.ApmTrace;
 import com.example.fn.interceptor.ApmTraceInterceptor;
-import com.fnproject.fn.api.Headers;
 import com.fnproject.fn.api.InvocationContext;
 import com.fnproject.fn.api.tracing.TracingContext;
 import com.github.kristofa.brave.IdConversion;
@@ -65,7 +64,7 @@ public class HelloFunction {
                 tracing.close();
                 zipkinSpanHandler.close();
             }
-            return helloFunction.greetService.say(input, tracingContext);
+            return helloFunction.greetService.say(input);
         } catch (Exception e) {
             return e.getMessage();
         }

@@ -1,7 +1,6 @@
 package com.example.fn;
 
 import com.example.fn.annotations.ApmTrace;
-import com.fnproject.fn.api.tracing.TracingContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,8 +12,8 @@ import java.util.logging.Logger;
 public class GreetService {
     private static Logger logger = Logger.getLogger(GreetService.class.getName());
 
-    public String say(String input, TracingContext tracingContext) {
-        return "Hello, AppName " + tracingContext.getAppName() + " :: fnName " + tracingContext.getFunctionName();
+    public String say(String input) {
+        return "Hello world!";
     }
 
     public void method1() {
