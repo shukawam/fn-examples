@@ -17,10 +17,11 @@ steps:
       echo OCI CLI `oci -v`
       echo MAVEN `mvn -v`
       echo GRADLE `gradle -v`
-      echo Tarraform `terraform -v`
-      echo Ansible `ansible --version`
+      echo NPM `npm --version`
       echo Fn `fn -v`
       echo Docker `docker -v`
+      echo PWD `pwd`
+      echo LS `la -a`
     onFailure:
       - type: Command
         timeoutInSeconds: 400
