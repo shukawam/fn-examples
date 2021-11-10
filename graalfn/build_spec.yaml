@@ -1,0 +1,41 @@
+# https://docs.oracle.com/ja-jp/iaas/Content/devops/using/build_specs.htm
+# build runner config
+version: 0.1
+component: build
+timeoutInSeconds: 10000
+shell: bash
+env:
+  vaultVariables:
+    docker_registry_password: ocid1.vaultsecret.oc1.ap-tokyo-1.amaaaaaassl65iqakp2dewaq7ucvw7twfg25cnwn7s2p3k45nitdskm3pcqq
+
+# steps
+steps:
+  - type: Command
+    name: "Show install commands"
+    timeoutInSeconds: 4000
+    command: |
+      echo OCI CLI `oci -v`
+      echo MAVEN `mvn -v`
+      echo GRADLE `gradle -v`
+      echo Tarraform `terraform -v`
+      echo Ansible `ansible --version`
+      echo Fn `fn -v`
+      echo Docker `docker -v`
+    onFailure:
+      - type: Command
+        timeoutInSeconds: 400
+        shell: /bin/sh
+        command: |
+          echo "Handling Failure"
+          build_result=FAILURE
+          echo "Failure successfully handled"
+  - type: Command
+    name: "Image build"
+    timeoutInSeconds: 4000
+    command: |
+      fn build
+
+outputArtifacts:
+  - name: graalfn-image
+    type: DOCKER_IMAGE
+    location: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn:0.0.2
