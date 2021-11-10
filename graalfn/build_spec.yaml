@@ -20,8 +20,6 @@ steps:
       echo NPM `npm --version`
       echo Fn `fn -v`
       echo Docker `docker -v`
-      echo PWD `pwd`
-      echo LS `la -a`
     onFailure:
       - type: Command
         timeoutInSeconds: 400
@@ -34,6 +32,7 @@ steps:
     name: "Image build"
     timeoutInSeconds: 4000
     command: |
+      cd graalfn
       fn build
 
 outputArtifacts:
