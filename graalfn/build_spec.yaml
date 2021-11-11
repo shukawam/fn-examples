@@ -13,6 +13,8 @@ env:
     function_tag: 0.0.1
   vaultVariables:
     docker_password: ocid1.vaultsecret.oc1.ap-tokyo-1.amaaaaaassl65iqakp2dewaq7ucvw7twfg25cnwn7s2p3k45nitdskm3pcqq
+  exportedVariables:
+    - tag
 
 # steps
 steps:
@@ -33,6 +35,7 @@ steps:
       cd graalfn
       fn build
       docker tag ${function_name}:${function_tag} ${docker_server}/${registry_path}:${function_tag}
+      tag=${function_tag}
     onFailure:
       - type: Command
         command: |
