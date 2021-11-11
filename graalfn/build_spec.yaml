@@ -8,10 +8,10 @@ env:
   variables:
     docker_server: nrt.ocir.io
     docker_username: orasejapan/oracleidentitycloudservice/shuhei.kawamura@oracle.com
-    repository_path: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn
-    image_version: 0.0.2
+    repository_path: orasejapan/shukawam-fn-repo/graalfn
+    tag: 0.0.2
   vaultVariables:
-    docker_registry_password: ocid1.vaultsecret.oc1.ap-tokyo-1.amaaaaaassl65iqakp2dewaq7ucvw7twfg25cnwn7s2p3k45nitdskm3pcqq
+    docker_password: ocid1.vaultsecret.oc1.ap-tokyo-1.amaaaaaassl65iqakp2dewaq7ucvw7twfg25cnwn7s2p3k45nitdskm3pcqq
 
 # steps
 steps:
@@ -19,7 +19,7 @@ steps:
     name: "Login to OCIR"
     timeoutInSeconds: 60
     command: |
-      docker login ${docker_server} -u ${docker_username} -p ${docker_registry_password}
+      docker login ${docker_server} -u ${docker_username} -p ${docker_password}
     onFailure:                     
       - type: Command
         command: |
@@ -40,8 +40,8 @@ steps:
     name: "Docker image push"
     timeoutInSeconds: 400
     command: |
-      echo ${docker_server}/${repository_path}:${image_version}
-      docker push ${docker_server}/${repository_path}:${image_version}
+      echo ${docker_server}/${repository_path}:${tag}
+      docker push ${docker_server}/${repository_path}:${tag}
     onFailure:                     
       - type: Command
         command: |
@@ -51,4 +51,4 @@ steps:
 outputArtifacts:
   - name: graalfn-image
     type: DOCKER_IMAGE
-    location: ${docker_server}/${repository_path}:${version}
+    location: ${docker_server}/${repository_path}:${tag}
