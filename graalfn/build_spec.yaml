@@ -32,7 +32,7 @@ steps:
     command: |
       cd graalfn
       fn build
-      docker tag ${function_name}:${function_tag} ${docker_server}/${registry_path}:${tag}
+      docker tag ${function_name}:${function_tag} ${docker_server}/${registry_path}:${function_tag}
     onFailure:
       - type: Command
         command: |
