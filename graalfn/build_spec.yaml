@@ -53,4 +53,4 @@ steps:
 outputArtifacts:
   - name: graalfn-image
     type: DOCKER_IMAGE
-    location: nrt.ocir.io/shukawam-fn-repo/graalfn:0.0.1
+    location: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn:0.0.1
