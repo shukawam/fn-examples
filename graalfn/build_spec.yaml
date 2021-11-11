@@ -5,37 +5,49 @@ component: build
 timeoutInSeconds: 10000
 shell: bash
 env:
+  variables:
+    docker_server: nrt.ocir.io
+    docker_username: orasejapan/oracleidentitycloudservice/shuhei.kawamura@oracle.com
+    repository_path: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn
+    image_version: 0.0.2
   vaultVariables:
     docker_registry_password: ocid1.vaultsecret.oc1.ap-tokyo-1.amaaaaaassl65iqakp2dewaq7ucvw7twfg25cnwn7s2p3k45nitdskm3pcqq
 
 # steps
 steps:
   - type: Command
-    name: "Show install commands"
-    timeoutInSeconds: 4000
+    name: "Login to OCIR"
+    timeoutInSeconds: 60
     command: |
-      echo OCI CLI `oci -v`
-      echo MAVEN `mvn -v`
-      echo GRADLE `gradle -v`
-      echo NPM `npm --version`
-      echo Fn `fn -v`
-      echo Docker `docker -v`
-    onFailure:
+      docker login ${docker_server} -u ${docker_username} -p ${docker_registry_password}
+    onFailure:                     
       - type: Command
-        timeoutInSeconds: 400
-        shell: /bin/sh
         command: |
-          echo "Handling Failure"
-          build_result=FAILURE
           echo "Failure successfully handled"
+        timeoutInSeconds: 60
   - type: Command
-    name: "Image build"
+    name: "Docker image build"
     timeoutInSeconds: 4000
     command: |
       cd graalfn
       fn build
+    onFailure:                     
+      - type: Command
+        command: |
+          echo "Failure successfully handled"
+        timeoutInSeconds: 60
+  - type: Command
+    name: "Docker image push"
+    timeoutInSeconds: 400
+    command: |
+      docker push ${docker_server}/${repository_path}:${version}
+    onFailure:                     
+      - type: Command
+        command: |
+          echo "Failure successfully handled"
+        timeoutInSeconds: 60
 
 outputArtifacts:
   - name: graalfn-image
     type: DOCKER_IMAGE
-    location: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn:0.0.2
+    location: ${docker_server}/${repository_path}:${version}
