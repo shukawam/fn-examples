@@ -40,7 +40,8 @@ steps:
     name: "Docker image push"
     timeoutInSeconds: 400
     command: |
-      docker push ${docker_server}/${repository_path}:${version}
+      echo ${docker_server}/${repository_path}:${image_version}
+      docker push ${docker_server}/${repository_path}:${image_version}
     onFailure:                     
       - type: Command
         command: |
