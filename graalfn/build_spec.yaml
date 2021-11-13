@@ -10,7 +10,7 @@ env:
     docker_server: nrt.ocir.io
     registry_path: orasejapan/shukawam-fn-repo/graalfn
     function_name: graalfn
-    function_tag: 0.0.1
+    function_version: 0.0.1
   vaultVariables:
     docker_password: ocid1.vaultsecret.oc1.ap-tokyo-1.amaaaaaassl65iqakp2dewaq7ucvw7twfg25cnwn7s2p3k45nitdskm3pcqq
   exportedVariables:
@@ -34,8 +34,8 @@ steps:
     command: |
       cd graalfn
       fn build
-      docker tag ${function_name}:${function_tag} ${docker_server}/${registry_path}:${function_tag}
-      tag=${function_tag}
+      docker tag ${function_name}:${function_version} ${docker_server}/${registry_path}
+      tag=${function_version}
     onFailure:
       - type: Command
         command: |
@@ -45,8 +45,8 @@ steps:
     name: "Docker image push"
     timeoutInSeconds: 400
     command: |
-      echo ${docker_server}/${registry_path}:${function_tag}
-      docker push ${docker_server}/${registry_path}:${function_tag}
+      echo ${docker_server}/${registry_path}
+      docker push ${docker_server}/${registry_path}
     onFailure:                     
       - type: Command
         command: |
@@ -56,4 +56,4 @@ steps:
 outputArtifacts:
   - name: graalfn-image
     type: DOCKER_IMAGE
-    location: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn:0.0.1
+    location: nrt.ocir.io/orasejapan/shukawam-fn-repo/graalfn
