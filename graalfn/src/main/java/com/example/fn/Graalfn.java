@@ -16,11 +16,15 @@
 
 package com.example.fn;
 
+import java.util.logging.Logger;
+
 public class Graalfn {
+    private static final Logger logger = Logger.getLogger(Graalfn.class.getName());
 
     public String handleRequest(String input) {
         String name = (input == null || input.isEmpty()) ? "world"  : input;
-
+        logger.info(name);
+        logger.severe("logging analytics test");
         return "Hello, " + name + "!";
     }
 
