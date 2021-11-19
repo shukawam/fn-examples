@@ -41,17 +41,6 @@ steps:
         command: |
           echo "Failure successfully handled"
         timeoutInSeconds: 60
-  - type: Command
-    name: "Docker image push"
-    timeoutInSeconds: 400
-    command: |
-      echo ${docker_server}/${registry_path}
-      docker push ${docker_server}/${registry_path}
-    onFailure:                     
-      - type: Command
-        command: |
-          echo "Failure successfully handled"
-        timeoutInSeconds: 60
 
 outputArtifacts:
   - name: graalfn-image
