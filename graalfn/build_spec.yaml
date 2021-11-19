@@ -36,6 +36,7 @@ steps:
       fn build
       docker tag ${function_name}:${function_version} ${docker_server}/${registry_path}
       tag=${function_version}
+      echo "Rename image tag"
     onFailure:
       - type: Command
         command: |
