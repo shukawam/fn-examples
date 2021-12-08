@@ -16,6 +16,8 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HelloFunction {
     private static final String TYPE = "TOKEN";
@@ -73,6 +75,9 @@ public class HelloFunction {
             response.setExpiresAt(ISO8601.format(new Date(idcsIntrospectionResponse.getExp()).toInstant().atOffset(ZoneOffset.UTC)));
             var scopes = idcsIntrospectionResponse.getScope().split(" ");
             response.setScope(scopes);
+            Map<String, Object> context = new HashMap<>();
+            context.put("path", "pilot");
+            response.setContext(context);
             return response;
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
