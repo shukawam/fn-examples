@@ -77,6 +77,7 @@ public class HelloFunction {
             response.setScope(scopes);
             Map<String, Object> context = new HashMap<>();
             context.put("path", "pilot");
+            context.put("pilot", 1);
             response.setContext(context);
             return response;
         } catch (InterruptedException | IOException e) {
