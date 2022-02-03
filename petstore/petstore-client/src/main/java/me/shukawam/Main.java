@@ -10,7 +10,7 @@ import me.shukawam.oci.petstore.model.Pet;
 public class Main {
     public static void main(String[] args) {
         ApiClient defaultClient = Configuration.getDefaultApiClient();
-        defaultClient.setBasePath("https://pdjk3ikdxkuktzcrvalmyu2ftq.apigateway.ap-tokyo-1.oci.customer-oci.com/api");
+        defaultClient.setBasePath("https://<oci-api-gateway-host>/api");
 
         PetsApi apiInstance = new PetsApi(defaultClient);
         try {
