@@ -16,7 +16,8 @@ public class HelloFunctionTest {
         testing.thenRun(HelloFunction.class, "handleRequest");
 
         FnResult result = testing.getOnlyResult();
-        assertEquals("Hello, world!", result.getBodyAsString());
+        String expected = "[{\"id\":1,\"name\":\"dog\"},{\"id\":2,\"name\":\"cat\"},{\"id\":3,\"name\":\"bird\"},{\"id\":4,\"name\":\"fish\"},{\"id\":5,\"name\":\"snake\"}]";
+        assertEquals(expected, result.getBodyAsString());
     }
 
 }
