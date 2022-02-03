@@ -1,12 +1,16 @@
 package com.example.fn;
 
+import com.fnproject.fn.api.InputEvent;
+import com.fnproject.fn.api.httpgateway.HTTPGatewayContext;
+
 public class HelloFunction {
 
-    public String handleRequest(String input) {
-        String name = (input == null || input.isEmpty()) ? "world"  : input;
-
-        System.out.println("Inside Java Hello World function"); 
-        return "Hello, " + name + "!";
+    public String handleRequest(HTTPGatewayContext ctx) {
+        return ctx.getRequestURL();
     }
+
+//    private Pet getPetById(int id) {
+//        return new null;
+//    }
 
 }
