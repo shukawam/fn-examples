@@ -2,7 +2,7 @@ package com.example.fn;
 
 public class HelloFunction {
 
-    public String handleRequest(Pet pet) {
+    public String handleRequest() {
         // do nothing.
         return "Pet created.";
     }
