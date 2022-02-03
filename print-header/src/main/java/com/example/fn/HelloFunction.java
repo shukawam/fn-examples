@@ -10,14 +10,14 @@ public class HelloFunction {
     public String handleRequest(String input, InputEvent inputEvent) {
         String name = (input == null || input.isEmpty()) ? "world" : input;
         // simple header logging
-        printHeader(inputEvent);
+        printXFFHeader(inputEvent);
         System.out.println("Inside Java Hello World function");
         return "Hello, " + name + "!";
     }
 
-    private static void printHeader(InputEvent inputEvent) {
-        inputEvent.getHeaders().asMap().forEach((key, value) -> {
-            logger.info(String.format("Header %s: %s", key, value));
+    private static void printXFFHeader(InputEvent inputEvent) {
+        inputEvent.getHeaders().get("Fn-Http-H-X-Forwarded-For").ifPresent(header -> {
+            logger.info("X-Forwarded-For: " + header);
         });
     }
 
