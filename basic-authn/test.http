@@ -1,0 +1,4 @@
+@host = https://pdjk3ikdxkuktzcrvalmyu2ftq.apigateway.ap-tokyo-1.oci.customer-oci.com/sandbox
+
+GET {{host}}/greet HTTP/1.1
+Authorization: Basic YWRtaW46cGFzc3dvcmQjMTIz
